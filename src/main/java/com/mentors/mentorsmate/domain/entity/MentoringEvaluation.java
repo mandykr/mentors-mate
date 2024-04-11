@@ -1,19 +1,25 @@
 package com.mentors.mentorsmate.domain.entity;
 
 import com.mentors.mentorsmate.domain.vo.MentoringScore;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MentoringEvaluation {
+    @Id
     private UUID id;
+
+    @Embedded
     private MentoringScore score;
     private String review;
 }

@@ -1,10 +1,12 @@
 package com.mentors.mentorsmate.domain.vo;
 
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Embeddable
 @Getter
 @EqualsAndHashCode
 public class MentoringScore {

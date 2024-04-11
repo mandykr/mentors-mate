@@ -1,6 +1,10 @@
 package com.mentors.mentorsmate.domain.entity;
 
 import com.mentors.mentorsmate.domain.vo.MateStatus;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +15,15 @@ import java.util.UUID;
 
 import static com.mentors.mentorsmate.domain.vo.MateStatus.*;
 
+@Entity
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mate {
+    @Id
     private UUID id;
+
+    @Enumerated(EnumType.STRING)
     private MateStatus status;
 
     public static Mate createDemanded(UUID id) {

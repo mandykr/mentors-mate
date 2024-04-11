@@ -3,6 +3,7 @@ package com.mentors.mentorsmate.domain.entity;
 import com.mentors.mentorsmate.domain.vo.MentoringHour;
 import com.mentors.mentorsmate.domain.vo.MentoringStartDateTime;
 import com.mentors.mentorsmate.domain.vo.MentoringStatus;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,13 +13,24 @@ import java.util.UUID;
 
 import static com.mentors.mentorsmate.domain.vo.MentoringStatus.*;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mentoring {
+    @Id
     private UUID id;
+
+    @Column(name = "mentoring_status")
+    @Enumerated(EnumType.STRING)
     private MentoringStatus status;
+
+    @Embedded
     private MentoringStartDateTime startDateTime;
+
+    @Embedded
     private MentoringHour hour;
+
+    @OneToOne
     private MentoringEvaluation evaluation;
 
     private Mentoring(UUID id, MentoringStatus status, MentoringStartDateTime startDateTime, MentoringHour hour) {
