@@ -1,6 +1,7 @@
 package com.mentors.mentorsmate.domain.entity;
 
 import com.mentors.mentorsmate.domain.vo.MateStatus;
+import com.mentors.mentorsmate.domain.vo.MentoringStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -31,14 +32,26 @@ public class Mate {
     }
 
     public void accept() {
+        if (status != DEMANDED) {
+            throw new RuntimeException();
+        }
         this.status = ACCEPTED;
     }
 
     public void reject() {
+        if (status != DEMANDED) {
+            throw new RuntimeException();
+        }
         this.status = REJECTED;
     }
 
-    public void cancel() {
+    public void cancel(MentoringStatus mentoringStatus) {
+        if (status != ACCEPTED) {
+            throw new RuntimeException();
+        }
+        if (!mentoringStatus.canCancelMate()) {
+            throw new RuntimeException();
+        }
         this.status = CANCELLED;
     }
 }
