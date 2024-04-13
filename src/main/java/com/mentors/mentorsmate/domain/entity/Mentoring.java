@@ -55,18 +55,30 @@ public class Mentoring {
     }
 
     public void accept() {
+        if (status != DEMANDED) {
+            throw new RuntimeException();
+        }
         this.status = ACCEPTED;
     }
 
     public void confirm() {
+        if (status != ACCEPTED) {
+            throw new RuntimeException();
+        }
         this.status = CONFIRMED;
     }
 
     public void complete() {
+        if (status != CONFIRMED) {
+            throw new RuntimeException();
+        }
         this.status = COMPLETED;
     }
 
     public void cancel() {
+        if (status != DEMANDED && status != ACCEPTED) {
+            throw new RuntimeException();
+        }
         this.status = CANCELLED;
     }
 
