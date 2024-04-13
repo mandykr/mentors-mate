@@ -54,4 +54,8 @@ public class Mate {
         }
         this.status = CANCELLED;
     }
+
+    public boolean cannotCreateMentoring() {
+        return this.status.cannotCreateMentoring();
+    }
 }
