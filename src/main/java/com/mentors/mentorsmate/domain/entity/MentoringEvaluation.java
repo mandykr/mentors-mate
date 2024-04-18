@@ -1,6 +1,7 @@
 package com.mentors.mentorsmate.domain.entity;
 
 import com.mentors.mentorsmate.domain.vo.MentoringScore;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MentoringEvaluation {
+    @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;
 

@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 import static com.mentors.mentorsmate.domain.vo.MentoringStatus.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mentoring {
+    @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;
 
@@ -29,10 +31,16 @@ public class Mentoring {
     @Embedded
     private MentoringHour hour;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "mate_id",
+            columnDefinition = "varbinary(16)",
+            foreignKey = @ForeignKey(name = "fk_mentoring_to_mate"))
     private Mate mate;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "evaluation_id",
+            columnDefinition = "varbinary(16)",
+            foreignKey = @ForeignKey(name = "fk_mentoring_to_evaluation"))
     private MentoringEvaluation evaluation;
 
     private Mentoring(UUID id, MentoringStatus status, MentoringStartDateTime startDateTime, MentoringHour hour, Mate mate) {

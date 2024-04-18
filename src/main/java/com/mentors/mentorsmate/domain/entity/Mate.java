@@ -2,10 +2,7 @@ package com.mentors.mentorsmate.domain.entity;
 
 import com.mentors.mentorsmate.domain.vo.MateStatus;
 import com.mentors.mentorsmate.domain.vo.MentoringStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +18,7 @@ import static com.mentors.mentorsmate.domain.vo.MateStatus.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mate {
+    @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;
 
