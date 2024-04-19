@@ -16,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Mentoring {
+public class Mentoring extends BaseEntity {
     @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;

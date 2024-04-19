@@ -17,7 +17,7 @@ import static com.mentors.mentorsmate.domain.vo.MateStatus.*;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Mate {
+public class Mate extends BaseEntity {
     @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;
@@ -25,8 +25,11 @@ public class Mate {
     @Enumerated(EnumType.STRING)
     private MateStatus status;
 
-    public static Mate createDemanded(UUID id) {
-        return new Mate(id, DEMANDED);
+    private UUID mentorId;
+    private UUID menteeId;
+
+    public static Mate createDemanded(UUID id, UUID mentorId, UUID menteeId) {
+        return new Mate(id, DEMANDED, mentorId, menteeId);
     }
 
     public void accept() {

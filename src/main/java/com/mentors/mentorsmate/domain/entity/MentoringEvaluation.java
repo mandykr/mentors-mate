@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class MentoringEvaluation {
+public class MentoringEvaluation extends BaseEntity {
     @Column(columnDefinition = "varbinary(16)")
     @Id
     private UUID id;

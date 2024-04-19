@@ -20,25 +20,27 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
 class MateTest {
     private UUID id = UUID.fromString("0ce594b5-456c-47b3-81ee-a0eb8686b840");
+    private UUID mentorId = UUID.fromString("7b384a92-6fee-431a-bf01-499864903489");
+    private UUID menteeId = UUID.fromString("b77a7259-36bf-435a-9331-cdfd8e44fec8");
 
     @DisplayName("메이트는 식별자, 상태를 갖는다.")
     @Test
     void create() {
-        assertThatCode(() -> createDemanded(id))
+        assertThatCode(() -> createDemanded(id, mentorId, menteeId))
                 .doesNotThrowAnyException();
     }
 
     @DisplayName("메이트는 최초에 요청 상태를 갖는다.")
     @Test
     void demand() {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         assertThat(mate.getStatus()).isEqualTo(DEMANDED);
     }
 
     @DisplayName("메이트를 수락하면 상태를 수락으로 변경한다.")
     @Test
     void accept() {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         mate.accept();
         assertThat(mate.getStatus()).isEqualTo(ACCEPTED);
     }
@@ -47,7 +49,7 @@ class MateTest {
     @ParameterizedTest
     @EnumSource(mode = EXCLUDE, names = {"DEMANDED"})
     void can_not_accept_unfit_mate_status(MateStatus status) {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", status);
         assertThatThrownBy(mate::accept)
                 .isExactlyInstanceOf(RuntimeException.class);
@@ -56,7 +58,7 @@ class MateTest {
     @DisplayName("메이트를 거절하면 상태를 거절로 변경한다.")
     @Test
     void reject() {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         mate.reject();
         assertThat(mate.getStatus()).isEqualTo(REJECTED);
     }
@@ -65,7 +67,7 @@ class MateTest {
     @ParameterizedTest
     @EnumSource(mode = EXCLUDE, names = {"DEMANDED"})
     void can_not_reject_unfit_mate_status(MateStatus status) {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", status);
         assertThatThrownBy(mate::reject)
                 .isExactlyInstanceOf(RuntimeException.class);
@@ -74,7 +76,7 @@ class MateTest {
     @DisplayName("메이트를 취소하면 상태를 취소로 변경한다.")
     @Test
     void cancel() {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", ACCEPTED);
         mate.cancel(MentoringStatus.CANCELLED);
         assertThat(mate.getStatus()).isEqualTo(CANCELLED);
@@ -84,7 +86,7 @@ class MateTest {
     @ParameterizedTest
     @EnumSource(mode = EXCLUDE, names = {"ACCEPTED"})
     void can_not_cancel_unfit_mate_status(MateStatus status) {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", status);
         assertThatThrownBy(() -> mate.cancel(MentoringStatus.CANCELLED))
                 .isExactlyInstanceOf(RuntimeException.class);
@@ -94,7 +96,7 @@ class MateTest {
     @ParameterizedTest
     @EnumSource(names = {"DEMANDED", "ACCEPTED", "CONFIRMED", "COMPLETED"})
     void can_not_cancel_unfit_mentoring_status(MentoringStatus mentoringStatus) {
-        Mate mate = createDemanded(id);
+        Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", ACCEPTED);
         assertThatThrownBy(() -> mate.cancel(mentoringStatus))
                 .isExactlyInstanceOf(RuntimeException.class);

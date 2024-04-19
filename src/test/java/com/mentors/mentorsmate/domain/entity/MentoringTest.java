@@ -20,13 +20,15 @@ import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 
 class MentoringTest {
     private final UUID id = UUID.fromString("33cadde5-554e-46fc-846c-a220d6f21735");
+    private final UUID mentorId = UUID.fromString("7b384a92-6fee-431a-bf01-499864903489");
+    private final UUID menteeId = UUID.fromString("b77a7259-36bf-435a-9331-cdfd8e44fec8");
     private MentoringStartDateTime startDateTime;
     private Mate mate;
 
     @BeforeEach
     void setup() {
         startDateTime = new MentoringStartDateTime(LocalDateTime.of(2024, Month.MARCH, 30, 10, 0));
-        mate = Mate.createDemanded(UUID.fromString("3e4413d2-234c-4100-9559-5f041826d7ec"));
+        mate = Mate.createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", MateStatus.ACCEPTED);
     }
 
@@ -40,7 +42,7 @@ class MentoringTest {
     @DisplayName("멘토링은 메이트가 수락 상태가 아니면 생성할 수 없다.")
     @Test
     void can_not_create_unfit_mate_status() {
-        Mate demandedMate = Mate.createDemanded(UUID.fromString("4a3879e6-1542-440b-bde1-29b0de7507d6"));
+        Mate demandedMate = Mate.createDemanded(id, mentorId, menteeId);
         assertThatThrownBy(() -> createDemanded(id, startDateTime, new MentoringHour(3), demandedMate))
                 .isExactlyInstanceOf(RuntimeException.class);
     }
@@ -67,6 +69,7 @@ class MentoringTest {
     @Test
     void confirm() {
         Mentoring mentoring = createDemanded(id, startDateTime, new MentoringHour(3), mate);
+        ReflectionTestUtils.setField(mentoring, "status", ACCEPTED);
         mentoring.confirm();
         assertThat(mentoring.getStatus()).isEqualTo(CONFIRMED);
     }
@@ -85,6 +88,7 @@ class MentoringTest {
     @Test
     void complete() {
         Mentoring mentoring = createDemanded(id, startDateTime, new MentoringHour(3), mate);
+        ReflectionTestUtils.setField(mentoring, "status", CONFIRMED);
         mentoring.complete();
         assertThat(mentoring.getStatus()).isEqualTo(COMPLETED);
     }
