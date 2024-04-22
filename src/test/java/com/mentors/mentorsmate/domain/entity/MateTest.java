@@ -12,11 +12,8 @@ import java.util.UUID;
 
 import static com.mentors.mentorsmate.domain.entity.Mate.createDemanded;
 import static com.mentors.mentorsmate.domain.vo.MateStatus.*;
-import static com.mentors.mentorsmate.domain.vo.MentoringStatus.COMPLETED;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
-import static org.junit.jupiter.params.provider.EnumSource.Mode.INCLUDE;
 
 class MateTest {
     private UUID id = UUID.fromString("0ce594b5-456c-47b3-81ee-a0eb8686b840");
@@ -92,9 +89,19 @@ class MateTest {
                 .isExactlyInstanceOf(RuntimeException.class);
     }
 
-    @DisplayName("멘토링이 요청, 수락, 확정, 완료 상태인 경우 취소할 수 없다.")
+    @DisplayName("멘토링이 완료, 취소 상태면 취소할 수 있다.")
     @ParameterizedTest
-    @EnumSource(names = {"DEMANDED", "ACCEPTED", "CONFIRMED", "COMPLETED"})
+    @EnumSource(names = {"COMPLETED", "CANCELLED"})
+    void can_cancel_unfit_mentoring_status(MentoringStatus mentoringStatus) {
+        Mate mate = createDemanded(id, mentorId, menteeId);
+        ReflectionTestUtils.setField(mate, "status", ACCEPTED);
+        assertThatCode(() -> mate.cancel(mentoringStatus))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("멘토링이 요청, 수락, 확정 상태면 취소할 수 없다.")
+    @ParameterizedTest
+    @EnumSource(names = {"DEMANDED", "ACCEPTED", "CONFIRMED"})
     void can_not_cancel_unfit_mentoring_status(MentoringStatus mentoringStatus) {
         Mate mate = createDemanded(id, mentorId, menteeId);
         ReflectionTestUtils.setField(mate, "status", ACCEPTED);

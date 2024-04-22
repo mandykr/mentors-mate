@@ -4,6 +4,6 @@ public enum MentoringStatus {
     DEMANDED, ACCEPTED, CONFIRMED, COMPLETED, CANCELLED;
 
     public boolean canCancelMate() {
-        return this == CANCELLED;
+        return this == CANCELLED || this == COMPLETED;
     }
 }
