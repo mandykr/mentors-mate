@@ -1,6 +1,7 @@
 package com.mentors.mentorsmate.application.port.input;
 
 import com.mentors.mentorsmate.application.dto.MentoringCreateRequest;
+import com.mentors.mentorsmate.application.dto.MentoringDetailsResponse;
 import com.mentors.mentorsmate.application.dto.MentoringResponse;
 import com.mentors.mentorsmate.application.port.output.MateRepository;
 import com.mentors.mentorsmate.application.port.output.MentoringRepository;
@@ -9,6 +10,8 @@ import com.mentors.mentorsmate.domain.entity.Mate;
 import com.mentors.mentorsmate.domain.entity.Mentoring;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,14 +62,26 @@ public class MentoringService implements MentoringUseCase {
         return MentoringResponse.of(mentoring);
     }
 
+    @Override
+    public Page<MentoringResponse> getAllMentoringBy(Pageable page, UUID mateId) {
+        return mentoringRepository.findAllByMateId(page, mateId)
+                .map(MentoringResponse::of);
+    }
+
+    @Override
+    public MentoringDetailsResponse getMentoringDetails(UUID mateId, UUID mentoringId) {
+        findMateOrElseThrow(mateId);
+        return MentoringDetailsResponse.of(
+                mentoringRepository.findWithEvaluationById(mentoringId));
+    }
+
     private Mate findMateOrElseThrow(UUID mateId) {
         return mateRepository.findById(mateId)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
     private Mentoring findOrElseThrow(UUID mentoringId) {
-        Mentoring mentoring = mentoringRepository.findById(mentoringId)
+        return mentoringRepository.findById(mentoringId)
                 .orElseThrow(EntityNotFoundException::new);
-        return mentoring;
     }
 }

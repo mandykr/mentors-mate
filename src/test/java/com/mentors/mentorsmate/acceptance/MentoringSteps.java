@@ -88,4 +88,61 @@ public class MentoringSteps {
                 () -> assertThat(response.jsonPath().getString("status")).isEqualTo("COMPLETED")
         );
     }
+
+    public static ExtractableResponse<Response> 멘토링_평가_등록(
+            ExtractableResponse<Response> response,
+            int score,
+            String review) {
+        String mateId = response.jsonPath().getString("mateId");
+        String id = response.jsonPath().getString("id");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("score", score + "");
+        params.put("review", review);
+
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().post(ENDPOINT + "/{mateId}/mentorings/{mentoringId}/evaluations", mateId, id)
+                .then().log().all().extract();
+    }
+
+    public static void 멘토링_평가_등록됨(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    public static ExtractableResponse<Response> 멘토링_상세_조회(ExtractableResponse<Response> response) {
+        String mateId = response.jsonPath().getString("mateId");
+        String id = response.jsonPath().getString("id");
+
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get(ENDPOINT + "/{mateId}/mentorings/{mentoringId}", mateId, id)
+                .then().log().all().extract();
+    }
+
+    public static void 멘토링_상세_조회됨(ExtractableResponse<Response> response) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("id")).isNotEmpty()
+        );
+    }
+
+    public static ExtractableResponse<Response> 멘토링_목록_조회(ExtractableResponse<Response> response) {
+        String mateId = response.jsonPath().getString("id");
+
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .when().get(ENDPOINT + "/{mateId}/mentorings", mateId)
+                .then().log().all().extract();
+    }
+
+    public static void 멘토링_목록_조회됨(ExtractableResponse<Response> response) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getInt("numberOfElements")).isGreaterThan(0)
+        );
+    }
 }

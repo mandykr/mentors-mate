@@ -32,6 +32,12 @@ public class MateAcceptanceTest extends AcceptanceTest {
      *     Then 멘토링이 완료된다.
      *     When 멘티가 메이트를 취소한다.
      *     Then 메이트가 취소된다.
+     *     When 멘티가 멘토링의 평가를 등록한다.
+     *     Then 멘토링의 평가가 등록된다.
+     *     When 멘토링 상세 정보를 조회한다.
+     *     Then 멘토링 상세 정보가 조회된다.
+     *     When 메이트의 멘토링 목록을 조회한다.
+     *     Then 멘토링 목록이 조회된다.
      */
     @DisplayName("메이트를 맺고 멘토링을 진행한다.")
     @Test
@@ -58,5 +64,16 @@ public class MateAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> cancelMate = 메이트_취소(demandedMate);
         메이트_취소됨(cancelMate);
+
+        int 평가_점수 = 3;
+        String 평가_리뷰 = "무난했어요.";
+        ExtractableResponse<Response> evaluation = 멘토링_평가_등록(confirmedMentoring, 평가_점수, 평가_리뷰);
+        멘토링_평가_등록됨(evaluation);
+
+        ExtractableResponse<Response> mentoringDetails = 멘토링_상세_조회(confirmedMentoring);
+        멘토링_상세_조회됨(mentoringDetails);
+
+        ExtractableResponse<Response> mentoringList = 멘토링_목록_조회(demandedMate);
+        멘토링_목록_조회됨(mentoringList);
     }
 }

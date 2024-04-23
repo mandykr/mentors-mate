@@ -1,12 +1,13 @@
 package com.mentors.mentorsmate.framwork.adapter.input;
 
-import com.mentors.mentorsmate.application.dto.MateCreateRequest;
-import com.mentors.mentorsmate.application.dto.MateResponse;
-import com.mentors.mentorsmate.application.dto.MentoringCreateRequest;
-import com.mentors.mentorsmate.application.dto.MentoringResponse;
+import com.mentors.mentorsmate.application.dto.*;
+import com.mentors.mentorsmate.application.port.usecase.EvaluationUseCase;
 import com.mentors.mentorsmate.application.port.usecase.MateUseCase;
 import com.mentors.mentorsmate.application.port.usecase.MentoringUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class MateRestController {
     private final MateUseCase mateUseCase;
     private final MentoringUseCase mentoringUseCase;
+    private final EvaluationUseCase evaluationUseCase;
 
     @PostMapping
     public ResponseEntity<MateResponse> createMate(@RequestBody MateCreateRequest request) {
@@ -77,5 +79,26 @@ public class MateRestController {
             @PathVariable UUID mateId,
             @PathVariable UUID mentoringId) {
         return ResponseEntity.ok(mentoringUseCase.cancelMentoring(mateId, mentoringId));
+    }
+
+    @PostMapping("/{mateId}/mentorings/{mentoringId}/evaluations")
+    public ResponseEntity<EvaluationResponse> createEvaluation(
+            @PathVariable UUID mateId,
+            @PathVariable UUID mentoringId,
+            @RequestBody EvaluationCreateRequest request) {
+        EvaluationResponse evaluation = evaluationUseCase.createEvaluation(mateId, mentoringId, request);
+        return ResponseEntity.created(URI.create("/mates/" + evaluation.getId())).body(evaluation);
+    }
+
+    @GetMapping("/{mateId}/mentorings")
+    public ResponseEntity<Page<MentoringResponse>> getAllMentoringBy(
+            @PageableDefault(size = 10, page = 0) Pageable page,
+            @PathVariable UUID mateId) {
+        return ResponseEntity.ok(mentoringUseCase.getAllMentoringBy(page, mateId));
+    }
+
+    @GetMapping("/{mateId}/mentorings/{mentoringId}")
+    public ResponseEntity<MentoringDetailsResponse> getMentoringDetails(@PathVariable UUID mateId, @PathVariable UUID mentoringId) {
+        return ResponseEntity.ok(mentoringUseCase.getMentoringDetails(mateId, mentoringId));
     }
 }
