@@ -1,24 +1,22 @@
 package com.mentors.mentorsmate.domain.vo;
 
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Embeddable
 @Getter
 @EqualsAndHashCode
-public class MentoringScore {
+public class EvaluationScore {
     private static final int MIN_SCORE = 0;
     private static final int MAX_SCORE = 5;
     private final int score;
 
-    protected MentoringScore() {
+    protected EvaluationScore() {
         this.score = -1;
     }
 
-    public MentoringScore(int score) {
+    public EvaluationScore(int score) {
         this.validate(score);
         this.score = score;
     }

@@ -128,7 +128,7 @@ class MentoringTest {
         ReflectionTestUtils.setField(mentoring, "status", COMPLETED);
 
         mentoring.registerEvaluation(new MentoringEvaluation(
-                UUID.fromString("077b9a9f-dfbf-4f4a-874a-c93cad6b1367"), new MentoringScore(2), "great"));
+                UUID.fromString("077b9a9f-dfbf-4f4a-874a-c93cad6b1367"), new EvaluationScore(2), "great"));
 
         assertThat(mentoring.getEvaluation()).isNotNull();
         assertThat(mentoring.getEvaluation().getReview()).isEqualTo("great");
@@ -139,7 +139,7 @@ class MentoringTest {
     void not_completed() {
         Mentoring mentoring = createDemanded(id, startDateTime, new MentoringHour(3), mate);
         assertThatThrownBy(() -> mentoring.registerEvaluation(new MentoringEvaluation(
-                UUID.fromString("077b9a9f-dfbf-4f4a-874a-c93cad6b1367"), new MentoringScore(2), "great")))
+                UUID.fromString("077b9a9f-dfbf-4f4a-874a-c93cad6b1367"), new EvaluationScore(2), "great")))
                 .isExactlyInstanceOf(RuntimeException.class);
     }
 }

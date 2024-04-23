@@ -1,6 +1,6 @@
 package com.mentors.mentorsmate.domain.entity;
 
-import com.mentors.mentorsmate.domain.vo.MentoringScore;
+import com.mentors.mentorsmate.domain.vo.EvaluationScore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -22,6 +22,6 @@ public class MentoringEvaluation extends BaseEntity {
     private UUID id;
 
     @Embedded
-    private MentoringScore score;
+    private EvaluationScore score;
     private String review;
 }
