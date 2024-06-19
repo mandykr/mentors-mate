@@ -1,0 +1,37 @@
+services:
+  mentors-mate:
+    container_name: mentors-mate
+    depends_on:
+      - mentors-mate-mysql
+    image: mandykr/mentors-mate:1.0
+    networks:
+      - mentors-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=integration
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mentors-mate-mysql:3306/matedb?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=mentors
+      - SPRING_DATASOURCE_PASSWORD=mentors
+      - SPRING_JPA_PROPERTIES_HIBERNATE.DIALECT=org.hibernate.dialect.MySQLDialect
+      - SPRING_JPA_HIBERNATE.DDL-AUTO=none
+    ports:
+      - "9010:9010"
+
+  mentors-mate-mysql:
+    container_name: mentors-mate-mysql
+    image: mysql:8.0
+    networks:
+      - mentors-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=mentors
+      - MYSQL_DATABASE=matedb
+      - MYSQL_PASSWORD=mentors
+      - MYSQL_USER=mentors
+    volumes:
+      - ./database/mysql/conf.d:/etc/mysql/conf.d
+      - ./database/mysql/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
+networks:
+  mentors-network:
+    external: true
